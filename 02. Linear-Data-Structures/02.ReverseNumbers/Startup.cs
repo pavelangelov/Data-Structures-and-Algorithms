@@ -12,7 +12,7 @@ namespace _02.ReverseNumbers
             ILogger logger = new ConsoleLogger();
             IReader reader = new ConsoleReader();
 
-            Stack<int> numbers = GetNumbers(reader, logger);
+            var numbers = TaskHelper.GetStackWithNumbers(reader, logger);
 
             PrintReversedNumbers(numbers, logger);
         }
@@ -32,30 +32,6 @@ namespace _02.ReverseNumbers
 
             logger.Write(" ]");
             logger.WriteLine();
-        }
-
-        private static Stack<int> GetNumbers(IReader reader, ILogger logger)
-        {
-            var input = reader.ReadLine();
-            var numbers = new Stack<int>();
-
-            while (!string.IsNullOrEmpty(input))
-            {
-                int number;
-
-                if (int.TryParse(input, out number))
-                {
-                    numbers.Push(number);
-                }
-                else
-                {
-                    logger.WriteLine($"The passed string '{input}' is not convertible to integer! Try again.");
-                }
-
-                input = reader.ReadLine();
-            }
-
-            return numbers;
         }
     }
 }

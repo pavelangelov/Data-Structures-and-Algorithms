@@ -13,7 +13,7 @@ namespace _01.CalculateSumAndAverage
             IReader reader = new ConsoleReader();
             ILogger logger = new ConsoleLogger();
 
-            ICollection<int> numbers = GetNumbers(reader, logger);
+            var numbers = TaskHelper.GetNumbers(reader, logger);
 
             PrintSumAndAverage(numbers, logger);
         }
@@ -25,30 +25,6 @@ namespace _01.CalculateSumAndAverage
 
             logger.WriteLine($"The sum of all numbers is: {sum}");
             logger.WriteLine($"The average value is: {average}");
-        }
-
-        private static ICollection<int> GetNumbers(IReader reader, ILogger logger)
-        {
-            var input = reader.ReadLine();
-            var numbers = new List<int>();
-
-            while (!string.IsNullOrEmpty(input))
-            {
-                int number;
-
-                if (int.TryParse(input, out number))
-                {
-                    numbers.Add(number);
-                }
-                else
-                {
-                    logger.WriteLine($"The passed string '{input}' is not convertible to integer! Try again.");
-                }
-
-                input = reader.ReadLine();
-            }
-
-            return numbers;
         }
     }
 }
