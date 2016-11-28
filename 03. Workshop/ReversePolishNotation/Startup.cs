@@ -1,15 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ReversePolishNotation
 {
-    class Program
+    class Startup
     {
-        static void Main(string[] args)
+        static void Main()
         {
+            /*                          Some test inputs and their results
+             *      
+             *  input: 7 8 +
+             *  result: 15
+             *  =====================================================================
+             *  input: 3 4 5 * +
+             *  result: 23
+             *  =====================================================================
+             *  input: 254 488 & 61 / 771 24 | * 394 3 428 | 141 171 & + | / 654 *
+             *  result: 1308
+             * */
+
             var input = Console.ReadLine().Split(' ');
 
             var numbers = new Stack<long>();
