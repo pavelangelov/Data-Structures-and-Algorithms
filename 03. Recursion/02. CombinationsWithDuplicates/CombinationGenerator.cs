@@ -8,6 +8,8 @@ namespace _02.CombinationsWithDuplicates
     public class CombinationGenerator
     {
         private ILogger logger;
+        private int n;
+        private int k;
 
         public CombinationGenerator(ILogger logger)
         {
@@ -19,31 +21,31 @@ namespace _02.CombinationsWithDuplicates
             this.logger = logger;
         }
 
-        public void Run(int loopsCount, int combinationsCount)
+        public void Run(int n, int k)
         {
-            var depth = Enumerable.Range(0, combinationsCount)
+            var depth = Enumerable.Range(0, k)
                                     .Select(x => 1)
                                     .ToArray();
-            RecuriveLoopSimulation(depth, loopsCount, combinationsCount);
+            this.n = n;
+            this.k = k;
+
+            RecuriveLoopSimulation(depth, 0, 0);
         }
 
-        private void RecuriveLoopSimulation(int[] depth, int counter, int current)
+        private void RecuriveLoopSimulation(int[] depth, int currentIndex, int start)
         {
-            for (int i = 0; i < counter; i++)
+            if (currentIndex >= k)
             {
-                if (current <= 1)
-                {
-                    this.logger.WriteLine(string.Join(", ", depth));
-                }
-                else
-                {
-                    RecuriveLoopSimulation(depth, counter, current - 1);
-                }
-
-                depth[depth.Length - current]++;
+                this.logger.WriteLine(string.Join(", ", depth));
             }
-
-            depth[depth.Length - current] = current;
+            else
+            {
+                for (int i = start; i < n; i++)
+                {
+                    depth[currentIndex] = i + 1;
+                    RecuriveLoopSimulation(depth, currentIndex + 1, i);
+                }
+            }
         }
     }
 }

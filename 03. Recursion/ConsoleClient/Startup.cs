@@ -20,10 +20,8 @@ namespace ConsoleClient
             recLoops.LoopsSimulation(3);
 
             // Task 2->Write a recursive program for generating and printing all the combinations with duplicatesof k elements from n-element set.
-
-            // This not works
             var combinations = new CombinationGenerator(logger);
-            combinations.Run(3, 2);
+            combinations.Run(5, 3);
 
             // Task 4 -> Write a recursive program for generating and printing all permutations of the numbers 1, 2, ..., n for given integer number n
 
@@ -36,7 +34,7 @@ namespace ConsoleClient
             var variations = new VariationGenerator().GetVariations(set, collection, 3, 2);
 
             logger.WriteLine(string.Join(", ", collection));
-            
+
         }
     }
 }
