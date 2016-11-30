@@ -21,7 +21,7 @@ namespace _02.CombinationsWithDuplicates
             this.logger = logger;
         }
 
-        public void Run(int n, int k)
+        public void CombinationsWithRepetitions(int n, int k)
         {
             var depth = Enumerable.Range(0, k)
                                     .Select(x => 1)
@@ -29,10 +29,36 @@ namespace _02.CombinationsWithDuplicates
             this.n = n;
             this.k = k;
 
-            RecuriveLoopSimulation(depth, 0, 0);
+            RecuriveWithRepetition(depth, 0, 0);
         }
 
-        private void RecuriveLoopSimulation(int[] depth, int currentIndex, int start)
+        public void CombinationsWithouthRepetitions(int n, int k)
+        {
+            var depth = Enumerable.Range(0, k)
+                                    .Select(x => 1)
+                                    .ToArray();
+            this.n = n;
+            this.k = k;
+            RecursiveWithoutRepetition(depth, 0, 0);
+        }
+
+        private void RecuriveWithRepetition(int[] depth, int currentIndex, int start)
+        {
+            if (currentIndex >= k)
+            {
+                this.logger.WriteLine(string.Join(", ", depth));
+            }
+            else
+            {
+                for (int i = start; i < n; i++)
+                {
+                    depth[currentIndex] = i + 2;
+                    RecuriveWithRepetition(depth, currentIndex + 1, i);
+                }
+            }
+        }
+
+        private void RecursiveWithoutRepetition(int[] depth, int currentIndex, int start)
         {
             if (currentIndex >= k)
             {
@@ -43,7 +69,7 @@ namespace _02.CombinationsWithDuplicates
                 for (int i = start; i < n; i++)
                 {
                     depth[currentIndex] = i + 1;
-                    RecuriveLoopSimulation(depth, currentIndex + 1, i);
+                    RecuriveWithRepetition(depth, currentIndex + 1, i);
                 }
             }
         }
