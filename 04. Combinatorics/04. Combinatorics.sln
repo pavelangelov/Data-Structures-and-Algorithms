@@ -14,6 +14,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "01.SumOfSubsequence", "01.S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Framework", "Framework\Framework.csproj", "{9A3BB4E3-F082-46AA-B797-3BC9D068A564}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "02.Binomial theorem", "02.Binomial theorem\02.Binomial theorem.csproj", "{F45D0C3B-7BEB-44A8-8CA5-AAEC87D6D557}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,6 +34,10 @@ Global
 		{9A3BB4E3-F082-46AA-B797-3BC9D068A564}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9A3BB4E3-F082-46AA-B797-3BC9D068A564}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9A3BB4E3-F082-46AA-B797-3BC9D068A564}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F45D0C3B-7BEB-44A8-8CA5-AAEC87D6D557}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F45D0C3B-7BEB-44A8-8CA5-AAEC87D6D557}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F45D0C3B-7BEB-44A8-8CA5-AAEC87D6D557}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F45D0C3B-7BEB-44A8-8CA5-AAEC87D6D557}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
