@@ -5,6 +5,7 @@ using _02.CombinationsWithDuplicates;
 using _04.Permutations;
 using _05.VariationsGenerator;
 using Framework.Models;
+using _06.GenerateSubsetOfStrings;
 
 namespace ConsoleClient
 {
@@ -31,13 +32,17 @@ namespace ConsoleClient
             var permutations = new Permutation(logger);
             permutations.PrintPermutations(3);
 
-            //// Task 5 -> Write a recursive program for generating and printing all ordered k-element subsets from n-element set (variations Vkn).
+            // Task 5 -> Write a recursive program for generating and printing all ordered k-element subsets from n-element set (variations Vkn).
             var set = new string[] { "hi", "a", "b", "c" };
             var collection = new List<string>();
             var variations = new VariationGenerator().GetVariations(set, collection, 3, 2);
 
             logger.WriteLine(string.Join(", ", collection));
 
+            // Task 6 -> Write a program for generating and printing all subsets of k strings from given set of strings.
+            var generator = new SubsetStrings(logger);
+            var words = new string[] { "test", "rock", "fun", "recursion"};
+            generator.GenerateSubsets(words, 2);
         }
     }
 }
