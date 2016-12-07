@@ -12,16 +12,16 @@
         internal static void Main(string[] args)
         {
             var collection = new SortableCollection<int>(new[] { 22, 11, 101, 33, 0, 101 });
-            //Console.WriteLine("All items before sorting:");
-            //collection.PrintAllItemsOnConsole();
-            //Console.WriteLine();
+            Console.WriteLine("All items before sorting:");
+            collection.PrintAllItemsOnConsole();
+            Console.WriteLine();
 
-            //Console.WriteLine("SelectionSorter result:");
-            //collection.Sort(new SelectionSorter<int>());
-            //collection.PrintAllItemsOnConsole();
-            //Console.WriteLine();
-            
-            collection = new SortableCollection<int>(new[] { 22, 11, 101, 33, 0, 99, 101 });
+            Console.WriteLine("SelectionSorter result:");
+            collection.Sort(new SelectionSorter<int>());
+            collection.PrintAllItemsOnConsole();
+            Console.WriteLine();
+
+            collection = new SortableCollection<int>(new[] { 22, 11, 101, 33, 0, 101 });
             Console.WriteLine("Quicksorter result:");
             collection.Sort(new Quicksorter<int>());
             collection.PrintAllItemsOnConsole();

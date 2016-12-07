@@ -10,7 +10,23 @@
     {
         public void Sort(IList<T> collection)
         {
-            throw new NotImplementedException();
+            for (int i = 0; i < collection.Count - 1; i++)
+            {
+                var current = collection[i];
+                for (int j = i + 1; j < collection.Count; j++)
+                {
+                    if (current.CompareTo(collection[j]) > 0)
+                    {
+                        this.Swap(collection, i, j);
+                    }
+                }
+            }
+        }
+        private void Swap(IList<T> collection, int firstElementIndex, int secondElementIndex)
+        {
+            T oldValue = collection[firstElementIndex];
+            collection[firstElementIndex] = collection[secondElementIndex];
+            collection[secondElementIndex] = oldValue;
         }
     }
 }
