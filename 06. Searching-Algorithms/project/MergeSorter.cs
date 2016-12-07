@@ -38,12 +38,12 @@
             for (; collectionIndex < collection.Count; collectionIndex++)
             {
 
-                if (leftIndex >= left.Count || rightIndex > right.Count)
+                if (leftIndex >= left.Count || rightIndex >= right.Count)
                 {
                     break;
                 }
 
-                if (left[leftIndex] .CompareTo(right[rightIndex]) <= 0)
+                if (left[leftIndex].CompareTo(right[rightIndex]) <= 0)
                 {
                     collection[collectionIndex] = left[leftIndex];
                     leftIndex++;
@@ -62,7 +62,7 @@
 
             for (int i = rightIndex; i < right.Count; i++, collectionIndex++)
             {
-                collection[collectionIndex] = right[rightIndex];
+                collection[collectionIndex] = right[i];
             }
         }
     }

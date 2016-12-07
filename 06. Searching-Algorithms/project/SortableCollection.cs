@@ -45,30 +45,32 @@
 
         public bool BinarySearch(T item)
         {
-            var length = this.items.Count;
-            var middle = length / 2;
-            while (true)
+            if(this.items.Count < 1)
             {
-                if(this.items[middle].CompareTo(item) == 0)
+                return false;
+            }
+
+            var min = 0;
+            var max = this.items.Count - 1;
+            while (min <= max)
+            {
+                var middle = (min + max) / 2;
+                if (this.items[middle].CompareTo(item) == 0)
                 {
                     return true;
                 }
-
-                length /= 2;
-                if (this.items[middle - 1].CompareTo(item) > 0)
+                
+                if (this.items[middle].CompareTo(item) > 0)
                 {
-                    middle = middle - (length / 2);
+                    max = middle - 1;
                 }
                 else
                 {
-                    middle = middle + (length / 2);
-                }
-
-                if(length == 0)
-                {
-                    return false;
+                    min = middle + 1;
                 }
             }
+
+            return false;
         }
 
         public void Shuffle()
