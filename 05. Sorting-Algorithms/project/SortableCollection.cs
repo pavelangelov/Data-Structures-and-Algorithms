@@ -42,7 +42,15 @@
 
         public void Shuffle()
         {
-            throw new NotImplementedException();
+            Random rand = new Random();
+            for (int i = 0; i < this.items.Count; i++)
+            {
+                var randomIndex = rand.Next(i, items.Count);
+
+                T oldValue = this.items[i];
+                this.items[i] = this.items[randomIndex];
+                this.items[randomIndex] = oldValue;
+            }
         }
 
         public void PrintAllItemsOnConsole()
