@@ -54,6 +54,8 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="SearchingAlgorythmsTests\BinarySearchShould_.cs" />
+    <Compile Include="SearchingAlgorythmsTests\LinearSearchShould_.cs" />
     <Compile Include="SortingAlgorythmsTests\MergeSorterTests.cs" />
     <Compile Include="SortingAlgorythmsTests\QuicksorterTests.cs" />
     <Compile Include="SortingAlgorythmsTests\SelectionSorterTests.cs" />
@@ -68,6 +70,7 @@
       <Name>SortingHomework</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>
