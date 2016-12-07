@@ -32,12 +32,43 @@
 
         public bool LinearSearch(T item)
         {
-            throw new NotImplementedException();
+            for (int i = 0; i < items.Count; i++)
+            {
+                if (this.items[i].CompareTo(item) == 0)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public bool BinarySearch(T item)
         {
-            throw new NotImplementedException();
+            var length = this.items.Count;
+            var middle = length / 2;
+            while (true)
+            {
+                if(this.items[middle].CompareTo(item) == 0)
+                {
+                    return true;
+                }
+
+                length /= 2;
+                if (this.items[middle - 1].CompareTo(item) > 0)
+                {
+                    middle = middle - (length / 2);
+                }
+                else
+                {
+                    middle = middle + (length / 2);
+                }
+
+                if(length == 0)
+                {
+                    return false;
+                }
+            }
         }
 
         public void Shuffle()
