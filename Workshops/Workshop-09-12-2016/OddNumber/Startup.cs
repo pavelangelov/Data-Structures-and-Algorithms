@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OddNumber
 {
@@ -10,22 +6,15 @@ namespace OddNumber
     {
         static void Main()
         {
-            var numbers = new HashSet<long>();
-            var n = long.Parse(Console.ReadLine());
+            var n = int.Parse(Console.ReadLine());
+            long result = 0;
             for (int i = 0; i < n; i++)
             {
-                var number = long.Parse(Console.ReadLine());
-                if (numbers.Contains(number))
-                {
-                    numbers.Remove(number);
-                }
-                else
-                {
-                    numbers.Add(number);
-                }
+                var currentNumber = long.Parse(Console.ReadLine());
+                result ^= currentNumber;
             }
 
-            Console.WriteLine(numbers.First());
+            Console.WriteLine(result);
         }
     }
 }
