@@ -14,11 +14,9 @@ namespace CLI
 
             EmptyTheQueue(queue);
 
-            // Check if there is extra values :)
-            Console.WriteLine($"Remove: {queue.Pull()}");
-            Console.WriteLine($"Current Top: {queue.Peek()}");
-
-            // Check if it`s strill working
+            // Check if there is extra values :) This should throw.
+            // Console.WriteLine(queue.Pull());
+            
             FillQueue(queue, 3);
             EmptyTheQueue(queue);
         }
@@ -38,8 +36,8 @@ namespace CLI
             var length = queue.Size;
             for (int i = 0; i < length; i++)
             {
-                Console.WriteLine($"Remove: {queue.Pull()}");
-                Console.WriteLine($"Current Top: {queue.Peek()}");
+                Console.WriteLine($"Pull: {queue.Pull()}");
+                Console.WriteLine($"Current Queue length: {queue.Size}");
             }
         }
     }

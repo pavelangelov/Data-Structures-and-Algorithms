@@ -20,6 +20,10 @@ namespace Framework
             {
                 this.Resize();
             }
+            else if(this.size < 0)
+            {
+                this.size = 0;
+            }
 
             this.queue[this.size] = item;
             ResortQueue(this.size);
@@ -28,25 +32,30 @@ namespace Framework
 
         public T Peek()
         {
+            if (this.size < 1)
+            {
+                throw new InvalidOperationException("The Queue is empty!");
+            }
+
             return this.queue[0];
         }
 
         public T Pull()
         {
-            T item = this.queue[0];
-            if (this.size > 1)
+            if (this.size >= 1)
             {
+                T item = this.queue[0];
                 this.size--;
                 this.queue[0] = this.queue[this.size];
 
                 RebalanceQueue(0);
+
+                return item;
             }
             else
             {
-                this.queue[0] = default(T);
+                throw new InvalidOperationException("The Queue is empty!");
             }
-
-            return item;
         }
 
         private void RebalanceQueue(int parentIndex)
