@@ -1,6 +1,7 @@
-﻿using System;
+﻿using System.Diagnostics;
 
 using Framework;
+using Framework.Contracts;
 
 namespace CLI
 {
@@ -8,37 +9,51 @@ namespace CLI
     {
         static void Main()
         {
+            var logger = new ConsoleLogger();
+
+            // Task 1. PriorityQueue<T>
+            PriorityQueueTest(logger);
+
+            // Task 2. Get products in price range using OrderedBag<T>
+            FindProductsInRangeTest(logger);
+
+        }
+
+        private static void PriorityQueueTest(ILogger logger)
+        {
+            logger.WriteLine(Constants.PriorityQueueTaskMessage);
             var queue = new PriorityQueue<int>(2);
 
-            FillQueue(queue, 10);
+            PriorityQueueTaskHelpers.FillQueue(queue, 10, logger);
 
-            EmptyTheQueue(queue);
+            PriorityQueueTaskHelpers.EmptyTheQueue(queue, logger);
 
             // Check if there is extra values :) This should throw.
-            // Console.WriteLine(queue.Pull());
-            
-            FillQueue(queue, 3);
-            EmptyTheQueue(queue);
+            // logger.WriteLine(queue.Pull());
+
+            PriorityQueueTaskHelpers.FillQueue(queue, 3, logger);
+            PriorityQueueTaskHelpers.EmptyTheQueue(queue, logger);
+
+            logger.WriteLine(Constants.Separator);
         }
 
-        private static void FillQueue(PriorityQueue<int> queue, int numberOfElements)
+        private static void FindProductsInRangeTest(ILogger logger)
         {
-            for (int i = 1; i <= numberOfElements; i++)
-            {
-                Console.WriteLine($"Insert {i} in the Queue.");
-                queue.Insert(i);
-                Console.WriteLine($"Current Top: {queue.Peek()}");
-            }
-        }
+            var watch = new Stopwatch();
+            logger.WriteLine(Constants.GetProductsInRangeMessage);
 
-        private static void EmptyTheQueue(PriorityQueue<int> queue)
-        {
-            var length = queue.Size;
-            for (int i = 0; i < length; i++)
-            {
-                Console.WriteLine($"Pull: {queue.Pull()}");
-                Console.WriteLine($"Current Queue length: {queue.Size}");
-            }
+            watch.Start();
+            var bag = FindProductsTaskHelpers.GenerateBag(Constants.NumberOfProducts);
+            watch.Stop();
+            logger.WriteLine($"Time for adding {Constants.NumberOfProducts} products -> {watch.Elapsed} seconds.");
+
+            watch.Reset();
+            watch.Start();
+            var productsInRange = bag.Range(new Product("Product", Constants.ProductPriceFrom), true, new Product("Product", Constants.ProductPriceTo), true);
+            watch.Stop();
+            logger.WriteLine($"Time for getting {productsInRange.Count} products in price range [{Constants.ProductPriceFrom}, {Constants.ProductPriceTo}] -> {watch.Elapsed} seconds.");
+
+            logger.WriteLine(Constants.Separator);
         }
     }
 }
