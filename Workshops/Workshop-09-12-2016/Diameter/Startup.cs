@@ -1,129 +1,80 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Diameter
 {
     class Startup
     {
-        // This is not a valid solution for now!!!
-
         static int n = int.Parse(Console.ReadLine());
-        static Graph graph = new Graph(n);
-        static bool[] visited = new bool[n];
-        static int longest = 0;
         static int root;
+        static int? maxDebth;
 
         static void Main()
         {
+            var graph = new List<Tuple<int, int>>[n];
+            for (int i = 0; i < n; i++)
+            {
+                graph[i] = new List<Tuple<int, int>>();
+            }
+
             for (int i = 0; i < n - 1; i++)
             {
                 var line = Console.ReadLine().Split(' ');
                 var firstNode = int.Parse(line[0]);
                 var secondNode = int.Parse(line[1]);
                 var length = int.Parse(line[2]);
-                if(graph.GetSuccessors(firstNode).Count == 0 && graph.GetSuccessors(secondNode).Count == 0)
-                {
-                    root = firstNode;
-                }
-                graph.AddEdge(firstNode, secondNode, length);
-                graph.AddEdge(secondNode, firstNode, length);
+
+                graph[firstNode].Add(new Tuple<int, int>(secondNode, length));
+                graph[secondNode].Add(new Tuple<int, int>(firstNode, length));
             }
 
-            longest = TraverseDFS(root);
-            Console.WriteLine(longest);
+            var rand = new Random();
+            // Find first node with max length
+            var visited = new bool[n];
+            var startIndex = rand.Next(0, n);
+            DFS(graph, startIndex, visited, 0);
+
+            // Start DFS from that node to find the Diameter 
+            visited = new bool[n];
+            var maxLength = DFS(graph, root, visited, 0);
+            Console.WriteLine(maxLength);
         }
 
-        static int TraverseDFS(int v)
+        static int DFS(List<Tuple<int, int>>[] graph, int node, bool[] visited, int? depth)
         {
-            var currentBest = 0;
-            List<int> results = new List<int>();
-            if (!visited[v])
+            int maxLength = 0;
+
+            if (!visited[node])
             {
-                visited[v] = true;
-                var successor = graph.GetSuccessors(v);
-                for (int i = 0; i < successor.Count; i += 2)
+                visited[node] = true;
+                foreach (var item in graph[node])
                 {
-                    var next = successor[i];
-                    if (!visited[next])
+                    var sibling = item.Item1;
+                    var itemLength = item.Item2;
+
+                    var nodeLength = 0;
+                    if (!visited[sibling])
                     {
-                        results.Add(TraverseDFS(next) + successor[i + 1]);
+                        nodeLength = DFS(graph, item.Item1, visited, depth + 1) + itemLength;
+                    }
+
+                    if (maxLength < nodeLength)
+                    {
+                        maxLength = nodeLength;
+                        if (maxDebth == null)
+                        {
+                            root = sibling;
+                        }
+                        else if (depth != null && maxDebth < depth + 1)
+                        {
+                            root = sibling;
+                        }
+                        maxDebth = depth + 1;
                     }
                 }
-                if (results.Count > 0)
-                {
-                    currentBest = results.Max();
-                }
             }
 
-            return currentBest;
+            return maxLength;
         }
-    }
-    public class Graph
-    {
-        // Contains the child nodes for each vertex of the graph
-        // assuming that the vertices are numbered 0 ... Size-1
-        private List<int>[] childNodes;
-
-        /// <summary>Constructs an empty graph of given size</summary>
-        /// <param name="size">number of vertices</param>
-        public Graph(int size)
-        {
-            this.childNodes = new List<int>[size];
-            for (int i = 0; i < size; i++)
-            {
-                // Assing an empty list of adjacents for each vertex
-                this.childNodes[i] = new List<int>();
-            }
-        }
-
-        /// <summary>Constructs a graph by given list of
-        /// child nodes (successors) for each vertex</summary>
-        /// <param name="childNodes">children for each node</param>
-        public Graph(List<int>[] childNodes)
-        {
-            this.childNodes = childNodes;
-        }
-
-        /// <summary>
-        /// Returns the size of the graph (number of vertices)
-        /// </summary>
-        public int Size
-        {
-            get { return this.childNodes.Length; }
-        }
-
-        /// <summary>Adds new edge from u to v</summary>
-        /// <param name="u">the starting vertex</param>
-        /// <param name="v">the ending vertex</param>
-        /// <param name="length">the length of the edge</param>
-        public void AddEdge(int u, int v, int length)
-        {
-            childNodes[u].Add(v);
-            childNodes[u].Add(length);
-        }
-
-        /// <summary>Returns the successors of a given vertex
-        /// </summary>
-        /// <param name="v">the vertex</param>
-        /// <returns>list of all successors of vertex v</returns>
-        public IList<int> GetSuccessors(int v)
-        {
-            return childNodes[v];
-        }
-
-        //public string PrintGraph()
-        //{
-        //    var result = new StringBuilder();
-        //    for (int i = 0; i < this.childNodes.Length; i++)
-        //    {
-        //        var node = this.childNodes[i];
-        //        result.AppendLine($"Node: {i} -> {string.Join(", ", node)}");
-        //    }
-
-        //    return result.ToString();
-        //}
     }
 }
