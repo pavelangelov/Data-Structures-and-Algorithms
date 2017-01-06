@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Diameter
 {
     class Startup
     {
         static int n = int.Parse(Console.ReadLine());
-        static int root;
-        static int? maxDebth;
 
         static void Main()
         {
@@ -27,52 +26,40 @@ namespace Diameter
                 graph[firstNode].Add(new Tuple<int, int>(secondNode, length));
                 graph[secondNode].Add(new Tuple<int, int>(firstNode, length));
             }
-
-            var rand = new Random();
-            // Find first node with max length
-            var visited = new bool[n];
-            var startIndex = rand.Next(0, n);
-            DFS(graph, startIndex, visited, 0);
-
-            // Start DFS from that node to find the Diameter 
-            visited = new bool[n];
-            var maxLength = DFS(graph, root, visited, 0);
-            Console.WriteLine(maxLength);
+            
+            // Start DFS fill max paths for ecery node 
+            var lengths = new int[n];
+            DFS(graph, lengths, 0, -1);
+            //Console.WriteLine(string.Join(", ", lengths));
+            Console.WriteLine(lengths.Max());
         }
 
-        static int DFS(List<Tuple<int, int>>[] graph, int node, bool[] visited, int? depth)
+        static int DFS(List<Tuple<int, int>>[] graph, int[] lengths, int currentNode, int previusNode)
         {
             int maxLength = 0;
+            int secondMaxLength = 0;
 
-            if (!visited[node])
+            foreach (var sibling in graph[currentNode])
             {
-                visited[node] = true;
-                foreach (var item in graph[node])
+                if (sibling.Item1 == previusNode)
                 {
-                    var sibling = item.Item1;
-                    var itemLength = item.Item2;
+                    continue;
+                }
 
-                    var nodeLength = 0;
-                    if (!visited[sibling])
-                    {
-                        nodeLength = DFS(graph, item.Item1, visited, depth + 1) + itemLength;
-                    }
+                var length = DFS(graph, lengths, sibling.Item1, currentNode) + sibling.Item2;
 
-                    if (maxLength < nodeLength)
-                    {
-                        maxLength = nodeLength;
-                        if (maxDebth == null)
-                        {
-                            root = sibling;
-                        }
-                        else if (depth != null && maxDebth < depth + 1)
-                        {
-                            root = sibling;
-                        }
-                        maxDebth = depth + 1;
-                    }
+                if (maxLength < length)
+                {
+                    secondMaxLength = maxLength;
+                    maxLength = length;
+                }
+                else if (secondMaxLength < length)
+                {
+                    secondMaxLength = length;
                 }
             }
+
+            lengths[currentNode] = maxLength + secondMaxLength;
 
             return maxLength;
         }
