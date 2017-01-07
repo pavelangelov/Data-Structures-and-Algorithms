@@ -10,8 +10,10 @@ namespace Reconstruction
     {
         public static int buildCost = 0;
         public static int destroyCost = 0;
+        public static string alfabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
         private static List<char>[] build;
         private static List<char>[] destroy;
+
         public static void Main()
         {
 
@@ -21,23 +23,75 @@ namespace Reconstruction
             GetPaths(paths, n);
             build = GetValues(n);
             destroy = GetValues(n);
-
-            for (int i = 0; i < paths.Size; i++)
+            for (int i = 0; i < n; i++)
             {
-                var node = paths.GetSuccessors(i);
-                if (node.Count == 0)
+                if (paths.GetSuccessors(i).Count == 0)
                 {
                     BuildPath(paths, i);
                 }
-                else if (node.Count > 1)
+                else
                 {
-                    DestroyPath(paths, i);
+                    bool[] visited = new bool[n];
+                    var loopFound = DFS(paths, visited, i, -1);
+                    if (loopFound && paths.GetSuccessors(i).Count > 1)
+                    {
+                        DestroyPath(paths, i);
+                    }
                 }
             }
 
-            Console.WriteLine(Math.Abs(buildCost - destroyCost));
+            for (int i = 0; i < n; i++)
+            {
+                var visited = new bool[n];
+                DFS(paths, visited, i, -1);
+                var nodeToConnect = new List<int>();
+                for (int j = 0; j < visited.Length; j++)
+                {
+                    if (j == i)
+                    {
+                        continue;
+                    }
 
+                    if (!visited[j])
+                    {
+                        nodeToConnect.Add(j);
+                    }
+                }
+
+                if (nodeToConnect.Count > 0)
+                {
+                    BuildPath(paths, i, nodeToConnect);
+                }
+            }
+
+            Console.WriteLine(buildCost + destroyCost);
             //Console.WriteLine(paths.PrintGraph());
+        }
+
+        static bool DFS(Graph graph, bool[] visited, int currentNode, int startNode)
+        {
+            if (currentNode == startNode || visited[currentNode])
+            {
+                return true;
+            }
+            else if (!visited[currentNode])
+            {
+                visited[currentNode] = true;
+                foreach (var edge in graph.GetSuccessors(currentNode))
+                {
+                    if (edge == startNode)
+                    {
+                        continue;
+                    }
+                    var hasLoop = DFS(graph, visited, edge, currentNode);
+                    if (hasLoop)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
 
         private static void DestroyPath(Graph paths, int i)
@@ -48,8 +102,8 @@ namespace Reconstruction
             for (int j = 0; j < currentNode.Count; j++)
             {
                 var next = currentNode[j];
-                var pathValue = build[i][next] - 'A';
-                if (worstPath > pathValue && paths.HasPath(next, i))
+                var pathValue = alfabet.IndexOf(destroy[i][next]);
+                if (worstPath > pathValue)
                 {
                     worstPath = pathValue;
                     neighbour = next;
@@ -59,26 +113,41 @@ namespace Reconstruction
             if (neighbour >= 0)
             {
                 paths.RemoveEdge(i, neighbour);
-                paths.CleanDirtyPaths(neighbour, i);
                 destroyCost += worstPath;
             }
         }
 
-        private static void BuildPath(Graph paths, int i)
+        private static void BuildPath(Graph paths, int i, List<int> nodeToConnect = null)
         {
             var bestPath = int.MaxValue;
             var neighbour = -1;
-            for (int j = 0; j < build.Length; j++)
+            if (nodeToConnect != null)
             {
-                if (j == i)
+                for (int j = 0; j < nodeToConnect.Count; j++)
                 {
-                    continue;
+                    var node = nodeToConnect[j];
+                    var pathValue = alfabet.IndexOf(build[i][node]);
+                    if (bestPath > pathValue)
+                    {
+                        bestPath = pathValue;
+                        neighbour = node;
+                    }
                 }
-                var pathValue = build[i][j] - 'A';
-                if (bestPath > pathValue && paths.GetSuccessors(j).Count == 0)
+            }
+            else
+            {
+                for (int j = 0; j < build.Length; j++)
                 {
-                    bestPath = pathValue;
-                    neighbour = j;
+                    if (j == i || paths.GetSuccessors(i).Contains(j))
+                    {
+                        continue;
+                    }
+                    var pathValue = alfabet.IndexOf(build[i][j]);
+                    if (bestPath > pathValue)
+                    {
+                        bestPath = pathValue;
+                        neighbour = j;
+                    }
                 }
             }
 
@@ -94,9 +163,9 @@ namespace Reconstruction
             var result = new List<char>[n];
             for (int i = 0; i < n; i++)
             {
-                var line = Console.ReadLine().ToCharArray().ToList();
                 // This line is for BgCoder.
-                //var line = Console.ReadLine().Split(' ').Select(x => char.Parse(x)).ToList(); 
+                var line = Console.ReadLine().ToCharArray().ToList();
+                // var line = Console.ReadLine().Split(' ').Select(x => char.Parse(x)).ToList();
                 result[i] = line;
             }
 
@@ -107,12 +176,12 @@ namespace Reconstruction
         {
             for (int i = 0; i < n; i++)
             {
-                var line = Console.ReadLine().Split(' ').Select(int.Parse).ToList();
+                // var line = Console.ReadLine().Split(' ').Select(int.Parse).ToList();
 
                 // This line is for BgCoder.
-                //var line = Console.ReadLine().ToCharArray()
-                //                            .Select(x => x - '0')
-                //                            .ToList();
+                var line = Console.ReadLine().ToCharArray()
+                                            .Select(x => x - '0')
+                                            .ToList();
                 for (int j = 0; j < line.Count; j++)
                 {
                     if (line[j] == 1)
@@ -167,7 +236,15 @@ namespace Reconstruction
             /// <param name="v">the ending vertex</param>
             public void AddEdge(int u, int v)
             {
-                childNodes[u].Add(v);
+                if (!childNodes[u].Contains(v))
+                {
+                    childNodes[u].Add(v);
+                }
+
+                if (!childNodes[v].Contains(u))
+                {
+                    childNodes[v].Add(u);
+                }
             }
 
             public void CleanDirtyPaths(int u, int pathToStay)
@@ -179,6 +256,7 @@ namespace Reconstruction
             public void RemoveEdge(int u, int v)
             {
                 childNodes[u].Remove(v);
+                childNodes[v].Remove(u);
             }
 
             public bool HasPath(int firstNode, int secondNode)
@@ -199,17 +277,17 @@ namespace Reconstruction
                 return childNodes[v];
             }
 
-            public string PrintGraph()
-            {
-                var result = new StringBuilder();
-                for (int i = 0; i < this.childNodes.Length; i++)
-                {
-                    var node = this.childNodes[i];
-                    result.AppendLine($"Node: {i} -> {string.Join(", ", node)}");
-                }
+            //public string PrintGraph()
+            //{
+            //    var result = new StringBuilder();
+            //    for (int i = 0; i < this.childNodes.Length; i++)
+            //    {
+            //        var node = this.childNodes[i];
+            //        result.AppendLine($"Node: {i} -> {string.Join(", ", node)}");
+            //    }
 
-                return result.ToString();
-            }
+            //    return result.ToString();
+            //}
         }
 
     }
